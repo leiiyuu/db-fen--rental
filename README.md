@@ -97,6 +97,7 @@ erDiagram
 | `UNIQUE` | `clients.email` | Один клиент — один email |
 | `UNIQUE` | `equipment.serial_number` | Серийник единицы уникален |
 | `UNIQUE` | `rental_items (rental_id, equipment_id)` | Одну единицу нельзя добавить в одну аренду дважды |
+| `NOT NULL` | `clients.full_name`, `equipment.name`, `rentals.starts_at`, `rentals.ends_at` | Обязательные поля для заполнения |
 | `CHECK` | `equipment.price_day > 0` | Цена аренды положительная |
 | `CHECK` | `rentals.ends_at > starts_at` | Аренда заканчивается позже, чем начинается |
 | `CHECK` | `equipment.status IN ('available','rented','repair')` | Статус — только из фиксированного списка |
