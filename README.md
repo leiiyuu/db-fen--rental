@@ -64,6 +64,7 @@ erDiagram
     RENTALS {
         integer id PK
         integer client_id FK
+        integer point_id FK
         timestamptz starts_at
         timestamptz ends_at
         text status
@@ -85,6 +86,7 @@ erDiagram
 
     CLIENTS ||--o{ RENTALS : creates
     POINTS ||--o{ EQUIPMENT : stores
+    POINTS ||--o{ RENTALS : issues
     RENTALS ||--o{ RENTAL_ITEMS : contains
     EQUIPMENT ||--o{ RENTAL_ITEMS : appears_in
     RENTALS ||--o{ DEPOSITS : has
