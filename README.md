@@ -1,18 +1,15 @@
-<!--
-  Это шаблон. После создания своего репозитория:
-  1. Назовите репозиторий db-<фамилия>-<тема>, например db-ivanova-cinema.
-  2. Заполните разделы ниже под свою тему и удалите этот комментарий.
--->
 
 # Название проекта
 
-Тема № __: **...**. Одно предложение: какие данные хранит база и кому они нужны.
+Тема №15: **Прокат снаряжения**. База хранит данные о клиентах, пунктах проката,
+единицах снаряжения, арендах и залогах. Нужна пунктам выдачи, чтобы вести учёт,
+кто что взял, когда должен вернуть и сколько оставил в залог.
 
 | | |
 | --- | --- |
-| Главная таблица | ... |
-| Связь N:M | ... и ... через `...` |
-| Бизнес-правило | ... |
+| Главная таблица | `equipment` — единицы снаряжения  |
+| Связь N:M | `rentals` и `equipment` через `rental_items` |
+| Бизнес-правило | Нельзя выдать единицу снаряжения, которая уже на руках |
 | СУБД | PostgreSQL 17 в Docker |
 
 ## Задания курса
@@ -42,32 +39,68 @@ dbcheck run demo/lab1.sql     # сценарий лабы 1
 
 ## ER-диаграмма
 
-<!-- Замените пример своими таблицами: 5+ таблиц, связь N:M через связующую таблицу. -->
-
 ```mermaid
 erDiagram
-    films ||--o{ sessions : "показывают"
-    halls ||--o{ sessions : "проходит в"
-    sessions ||--o{ tickets : "продано"
-    films ||--o{ film_genres : ""
-    genres ||--o{ film_genres : ""
+    CLIENTS {
+        integer id PK
+        text full_name
+        text phone
+        text email
+    }
+    POINTS {
+        integer id PK
+        text name
+        text address
+        text phone
+    }
+    EQUIPMENT {
+        integer id PK
+        text name
+        text category
+        numeric price_day
+        text status
+        integer point_id FK
+    }
+    RENTALS {
+        integer id PK
+        integer client_id FK
+        timestamptz starts_at
+        timestamptz ends_at
+        text status
+        numeric total_price
+        timestamptz created_at
+    }
+    RENTAL_ITEMS {
+        integer rental_id PK, FK
+        integer equipment_id PK, FK
+        numeric price
+    }
+    DEPOSITS {
+        integer id PK
+        integer rental_id FK
+        numeric amount
+        text status
+        timestamptz created_at
+    }
 
-    films {
-        int id PK
-        text title
-    }
-    film_genres {
-        int film_id PK, FK
-        int genre_id PK, FK
-    }
+    CLIENTS ||--o{ RENTALS : creates
+    POINTS ||--o{ EQUIPMENT : stores
+    RENTALS ||--o{ RENTAL_ITEMS : contains
+    EQUIPMENT ||--o{ RENTAL_ITEMS : appears_in
+    RENTALS ||--o{ DEPOSITS : has
 ```
 
 ## Ограничения
 
 | Ограничение | Таблица и колонки | Зачем |
 | --- | --- | --- |
-| `UNIQUE` | ... | ... |
-| `CHECK` | ... | ... |
+| `UNIQUE` | `clients.email` | Один клиент — один email |
+| `UNIQUE` | `equipment.serial_number` | Серийник единицы уникален |
+| `UNIQUE` | `rental_items (rental_id, equipment_id)` | Одну единицу нельзя добавить в одну аренду дважды |
+| `CHECK` | `equipment.price_day > 0` | Цена аренды положительная |
+| `CHECK` | `rentals.ends_at > starts_at` | Аренда заканчивается позже, чем начинается |
+| `CHECK` | `equipment.status IN ('available','rented','repair')` | Статус — только из фиксированного списка |
+| `CHECK` | `deposits.amount >= 0` | Залог не может быть отрицательным |
 
 ## Что сделано по лабам
 
