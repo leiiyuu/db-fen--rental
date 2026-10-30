@@ -96,3 +96,8 @@ INSERT INTO deposits (rental_id, amount, status) VALUES
     (10,  500.00, 'active'),
     (11,  500.00, 'returned'),
     (12, 2000.00, 'active');
+
+
+    -- Клиент без аренд (лаб 2)
+INSERT INTO clients (full_name, phone, email) 
+VALUES ('Тестовый Сирота', '+7-000-000-00-00', 'orphan@example.com');
