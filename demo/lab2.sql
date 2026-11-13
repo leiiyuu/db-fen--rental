@@ -77,7 +77,7 @@ UPDATE equipment SET price_day = price_day * 1.1 WHERE category = 'tent';
 SELECT name, price_day FROM equipment WHERE category = 'tent';
 ROLLBACK;
 
--- 11. Удалить залоги со статусом 'returned' (возвращенные)
+-- 11. Удалить залоги со статусом 'returned'
 BEGIN;
 SELECT count(*) FROM deposits WHERE status = 'returned';
 DELETE FROM deposits WHERE status = 'returned';
