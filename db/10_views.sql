@@ -15,7 +15,7 @@ JOIN points p ON p.id = r.point_id
 JOIN rental_items ri ON ri.rental_id = r.id
 JOIN equipment e ON e.id = ri.equipment_id;
 
--- 2. Свободное снаряжение
+-- 2. свободное снаряжение
 CREATE OR REPLACE VIEW v_available_equipment AS
 SELECT e.id, e.name, e.category, e.price_day, p.name AS point_name
 FROM equipment e
@@ -24,7 +24,7 @@ WHERE e.status = 'available';
 
 
 
--- Материализованное представление: выручка по месяцам
+-- ★ материализованное представление: выручка по месяцам
 CREATE MATERIALIZED VIEW mv_monthly_revenue AS
 SELECT 
     date_trunc('month', starts_at)::date AS month,

@@ -11,10 +11,11 @@ BEGIN
 END;
 $$;
 
--- триггер на вставку в позиции аренды
+
 CREATE TRIGGER trg_check_equipment_available
 BEFORE INSERT ON rental_items
 FOR EACH ROW EXECUTE FUNCTION check_equipment_available();
+
 
 --- служебный триггер
 ALTER TABLE rentals ADD COLUMN updated_at timestamptz NOT NULL DEFAULT now();
